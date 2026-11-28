@@ -32,6 +32,7 @@ import AppIcon from '../ui/AppIcon.vue'
 import { entryDetails } from '../ui/entryDetails'
 import { canDo, taskName, useFarm } from '../ui/farm'
 import OilDrop from '../ui/OilDrop.vue'
+import PageLink from '../ui/PageLink.vue'
 import SwipeTrack from '../ui/SwipeTrack.vue'
 import TaskIcon from '../ui/TaskIcon.vue'
 
@@ -495,9 +496,9 @@ function millName(id: string | undefined) {
               class="muted small home-ring-open"
               >{{ $t('home.thisYear', { task: taskName(translate, mainTask) }) }}</RouterLink
             >
-            <RouterLink v-if="figuresLink" to="/reports" class="home-link">
+            <PageLink v-if="figuresLink" to="/reports" class="home-link">
               {{ $t('home.details') }} ›
-            </RouterLink>
+            </PageLink>
           </span>
           <strong class="home-big-line">{{ amountOf(mainRing) }}</strong>
           <span class="muted small">
@@ -592,7 +593,7 @@ function millName(id: string | undefined) {
 
     <!-- Olives and oil in the harvest; oil in stock and sold the rest of the year -->
     <div v-if="figuresLink && !ringShown" class="home-checklist-head home-figures-head">
-      <RouterLink to="/reports" class="home-link">{{ $t('home.moreInfo') }} ›</RouterLink>
+      <PageLink to="/reports" class="home-link">{{ $t('home.moreInfo') }} ›</PageLink>
     </div>
     <div v-if="seeOil" class="home-tiles">
       <template v-if="inHarvest">
@@ -639,7 +640,7 @@ function millName(id: string | undefined) {
         >
           {{ $t('common.today') }}
         </button>
-        <RouterLink to="/journal" class="home-link">{{ $t('home.journal') }} ›</RouterLink>
+        <PageLink to="/journal" class="home-link">{{ $t('home.journal') }} ›</PageLink>
       </div>
       <SwipeTrack
         v-slot="{ offset }"
@@ -670,7 +671,7 @@ function millName(id: string | undefined) {
     <section v-if="seeWork" class="card home-month">
       <div class="home-checklist-head">
         <h2 class="cap">{{ monthTitle }}</h2>
-        <RouterLink to="/journal" class="home-link">{{ $t('home.journal') }} ›</RouterLink>
+        <PageLink to="/journal" class="home-link">{{ $t('home.journal') }} ›</PageLink>
       </div>
       <div class="home-calendar">
         <span v-for="(name, i) in weekdayNames" :key="`w${i}`" class="muted small">{{
@@ -700,8 +701,8 @@ function millName(id: string | undefined) {
     <section v-if="seeWork || seeOil" class="home-latest">
       <div class="home-checklist-head">
         <h2>{{ $t('home.latest') }}</h2>
-        <RouterLink v-if="seeWork" to="/journal" class="home-link"
-          >{{ $t('home.allWork') }} ›</RouterLink
+        <PageLink v-if="seeWork" to="/journal" class="home-link"
+          >{{ $t('home.allWork') }} ›</PageLink
         >
       </div>
       <p v-if="latest.length === 0" class="card muted">{{ $t('home.nothingYet') }}</p>
