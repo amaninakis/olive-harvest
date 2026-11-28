@@ -222,15 +222,16 @@ function phoneLayout() {
 }
 
 /**
- * Open a tab chosen in the bottom menu. On a phone it comes in from its side, drawn beside
- * this page and sliding over as after a swipe (a tab further away comes in the same way,
- * without the ones between). Within the same tab, on a computer or with reduced motion, it
- * simply opens.
+ * Open a tab chosen in the bottom menu, or a page a link points to. On a phone it comes in
+ * from its side, drawn beside this page and sliding over as after a swipe (a tab further away
+ * comes in the same way, without the ones between). A page within the same tab, such as the
+ * journal from the home page, comes in from the right, and the tab's own page from the left.
+ * On a computer or with reduced motion, it simply opens.
  */
 async function open(path: string) {
   const from = tabOf(route.path, props.tabs)
   const to = tabOf(path, props.tabs)
-  if (phase.value !== 'idle' || from === -1 || to === -1 || from === to) {
+  if (phase.value !== 'idle' || from === -1 || to === -1 || path === route.path) {
     void router.push(path)
     return
   }
@@ -238,13 +239,24 @@ async function open(path: string) {
     void router.push(path)
     return
   }
-  const side = to > from ? 1 : -1
+  const side = slideSide(from, to, path)
   chosen.value = { path, side }
   previewTop.value = Math.max(0, -(area.value?.getBoundingClientRect().top ?? 0))
   offsetX.value = 0
   phase.value = 'drag'
   await nextTick() // the chosen page is drawn beside this one first
   requestAnimationFrame(() => settle(side, SLIDES.tap))
+}
+
+/**
+ * Which side a page comes in from: a later tab, or a deeper page of the same tab, the right.
+ */
+function slideSide(from: number, to: number, path: string): -1 | 1 {
+  if (from !== to) {
+    return to > from ? 1 : -1
+  }
+
+  return path === props.tabs[to] ? -1 : 1
 }
 
 defineExpose({ open })

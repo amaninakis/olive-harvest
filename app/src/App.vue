@@ -2,7 +2,7 @@
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import type { IconName } from './ui/icons'
 import { useTranslation } from 'i18next-vue'
-import { computed, useTemplateRef, watch } from 'vue'
+import { computed, provide, useTemplateRef, watch } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { type Area, can, PRESETS } from './core/access'
 import { todayISO } from './core/dates'
@@ -21,6 +21,7 @@ import AppToast from './ui/AppToast.vue'
 import { hasDraft } from './ui/draft'
 import { type FarmData, provideFarm } from './ui/farm'
 import { useLiveQuery } from './ui/live'
+import { OPEN_PAGE } from './ui/pageLink'
 import PageSheet from './ui/PageSheet.vue'
 import PageSwiper from './ui/PageSwiper.vue'
 import { isSheetPath, sheetBackdrop, sheetParent } from './ui/sheet'
@@ -289,6 +290,15 @@ function openTab(event: MouseEvent, to: string) {
     void router.push(to)
   }
 }
+
+/** Links inside pages (e.g. the home page's "Ημερολόγιο ›") slide in like the bottom menu. */
+provide(OPEN_PAGE, (path: string) => {
+  if (pageSwiper.value) {
+    void pageSwiper.value.open(path)
+  } else {
+    void router.push(path)
+  }
+})
 
 /** Pages that need an area: opening one without access goes to the first page allowed. */
 const PAGE_ACCESS: { prefix: string; area: Area; level: 'see' | 'change' }[] = [
